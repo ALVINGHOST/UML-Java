@@ -16,59 +16,59 @@ public User(int UID,String dpName,String user,String pass){
     setPassword(pass);
     setUsername(user);
     setUserID(UID);
-
-
-
-
     }
 
 
-    public static void FindUser(String Username, String Password) {
+    public static boolean FindUser(String username, String password) {
         {
             try {
-                BufferedReader reader = new BufferedReader(new FileReader("UserDB.txt"));
+                BufferedReader reader = new BufferedReader(new FileReader("UserDB.csv"));
                 String line;
                 User readuser = null;
                 while ((line = reader.readLine()) != null) {
                     System.out.println("");
-                    String[] lineData = line.split(",");
+                    String[] lineData = line.split("\t");
                     int fid = Integer.parseInt(lineData[0]);
                     String fusername = lineData[1];
                     String fname = lineData[2];
                     String fpassword = lineData[3];
 
-                    if (Username.equals(fusername) && Password.equals(fpassword)) {
+                    if (username.equals(fusername) && password.equals(fpassword)) {
                         readuser = new User(fid, fname, fusername, fpassword);
-                        UserView.viewChoice(readuser);
+                        Controller.startUserView(readuser);
                         break;
                     }
                 }
-                if (readuser == null)
-                    System.out.println("--USER NOT FOUND!--");
+                if (readuser == null) {
+                    System.out.println("--USERNAME OR PASSWORD INCORRECT--");
+                    return false;
+                }
             } catch (IOException e) {
                 System.out.println("Fel vid läsning i Controller: " + e);
             }
+            return true;
         }
     }
-    public static void signUp(String uName,String pWord, String displayname ){
+    public static void saveUser(String uName, String pWord, String displayname ){
         int id = 0;
-        try(BufferedReader reader = new BufferedReader(new FileReader("UserDB.txt"))){
+        try(BufferedReader reader = new BufferedReader(new FileReader("UserDB.csv"))){
             String line;
             while((line = reader.readLine()) != null) {
                 id++;
-
             }
         }catch(IOException e) {
             System.out.println("ERROR READING FILE IN USER " + e);
         }
         User u1 = new User(id,displayname,uName.toLowerCase(),pWord);
         System.out.println(u1);
-        try(FileWriter writer = new FileWriter("UserDB.txt", true)){
+        try(FileWriter writer = new FileWriter("UserDB.csv", true)){
             writer.write(u1.toString()+ "\n");
-            System.out.println("CREATION SUCCESFULL!");
+            System.out.println("ACCOUNT CREATED SUCCESSFULLY!");
+
         }catch(IOException e) {
             e.printStackTrace();
         }
+        Controller.startUserView(u1);
     }
 
     public String getName() {
@@ -106,7 +106,7 @@ public User(int UID,String dpName,String user,String pass){
 
     @Override
     public String toString() {
-        return userID+","+username+","+name+","+password;
+        return userID+"\t"+username+"\t"+name+"\t"+password;
     }
 
 

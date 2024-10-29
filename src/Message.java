@@ -1,44 +1,43 @@
 import java.io.*;
 import java.lang.*;
 import java.util.*;
-import java.time.*;
 
 public class Message {
 
     private String content;
     private String date;
-    private String Author;
-    private String Display;
-    private int MessageID;
+    private String author;
+    private String display;
+    private int messageID;
 
-    public Message(String Auth,String Display,String Content,String date,int MID){
-        setAuthor(Auth);
-        setContent(Content);
-        setDisplay(Display);
+    public Message(String auth,String display,String content,String date,int mID){
+        setAuthor(auth);
+        setContent(content);
+        setDisplay(display);
         setDate(date);
-        setMessageID(MID);
+        setMessageID(mID);
     }
 
     public static void createMessage(User user,String content){
         String date = String.format(String.valueOf(new Date()));
-        String file = "MessageDB.txt";
+        String file = "MessageDB.csv";
         Scanner input = null;
-        int MID = 0;
+        int mID = 0;
         try{
             input = new Scanner(new File(file));
             while (input.hasNextLine()) {
                 String line = input.nextLine();
                 String[] toks = line.split("\t");
-                 MID = Integer.parseInt(toks[0].trim());
+                 mID = Integer.parseInt(toks[0].trim());
             }
 
         }catch(IOException e) {
             System.out.println("ERROR READING FILE IN MESSAGE " + e);
         }
-        MID++;
-        Message m1 = new Message (user.getUsername(),user.getName(),content,date,MID);
+        mID++;
+        Message m1 = new Message (user.getUsername(),user.getName(),content,date, mID);
         System.out.println(m1);
-        try(FileWriter writer = new FileWriter("MessageDB.txt", true)){
+        try(FileWriter writer = new FileWriter("MessageDB.csv", true)){
             writer.write(m1.toString()+ "\n");
             System.out.println("MESSAGE CREATED!");
         }catch(IOException e) {
@@ -47,7 +46,7 @@ public class Message {
     }
 
     public static ArrayList<Message> viewAllMessages(){
-        String file = "MessageDB.txt";
+        String file = "MessageDB.csv";
         Scanner input = null;
         ArrayList<Message> messages = new ArrayList<>();
         try {
@@ -55,13 +54,13 @@ public class Message {
             while (input.hasNextLine()) {
                 String line = input.nextLine();
                 String[] toks = line.split("\t");
-                int MID = Integer.parseInt(toks[0].trim());
+                int mID = Integer.parseInt(toks[0].trim());
                 String auth = toks[1].trim();
                 String display = toks[2].trim();
                 String cont = toks[3].trim();
                 String date = toks[4].trim();
 
-                Message ac = new Message(auth,display,cont,date,MID);
+                Message ac = new Message(auth,display,cont,date, mID);
                 messages.add(ac);
             }
 
@@ -72,7 +71,7 @@ public class Message {
     }
 
     public static ArrayList<Message> viewOwnMessages(User user){
-        String file = "MessageDB.txt";
+        String file = "MessageDB.csv";
         Scanner input = null;
         ArrayList<Message> messages = new ArrayList<>();
         try {
@@ -80,13 +79,13 @@ public class Message {
             while (input.hasNextLine()) {
                 String line = input.nextLine();
                 String[] toks = line.split("\t");
-                int MID = Integer.parseInt(toks[0].trim());
+                int mID = Integer.parseInt(toks[0].trim());
                 String auth = toks[1].trim();
                 String display = toks[2].trim();
                 String cont = toks[3].trim();
                 String date = toks[4].trim();
                 if (user.getUsername().equals(auth)){
-                Message ac = new Message(auth,display,cont,date,MID);
+                Message ac = new Message(auth,display,cont,date, mID);
                 messages.add(ac);
                 }
             }
@@ -97,8 +96,8 @@ public class Message {
         return messages;
     }
 
-    public static void deleteMessage(int MessageID){
-        String file = "MessageDB.txt";
+    public static void deleteMessageFromFile(int messageID){
+        String file = "MessageDB.csv";
         Scanner input = null;
         ArrayList<Message> messages = new ArrayList<>();
         try {
@@ -106,17 +105,17 @@ public class Message {
             while (input.hasNextLine()) {
                 String line = input.nextLine();
                 String[] toks = line.split("\t");
-                int MID = Integer.parseInt(toks[0].trim());
+                int mID = Integer.parseInt(toks[0].trim());
                 String auth = toks[1].trim();
                 String display = toks[2].trim();
                 String cont = toks[3].trim();
                 String date = toks[4].trim();
-                if (MessageID != MID){
-                    System.out.println(MessageID + MID);
-                    Message ac = new Message(auth,display,cont,date,MID);
+                if (messageID != mID){
+                    System.out.println(messageID + mID);
+                    Message ac = new Message(auth,display,cont,date, mID);
                     messages.add(ac);
                 }else{
-                    System.out.println(MessageID + MID);
+                    System.out.println(messageID + mID);
                     System.out.println("MESSAGE DELETED!");
                 }
             }
@@ -125,7 +124,7 @@ public class Message {
             throw new RuntimeException(e);
         }
 
-            try(FileWriter writer = new FileWriter("MessageDB.txt", false)){
+            try(FileWriter writer = new FileWriter("MessageDB.csv", false)){
                 for(Message m:messages){
                     writer.write(m.toString()+ "\n");
                 }
@@ -151,29 +150,29 @@ public class Message {
     }
 
     public String getAuthor() {
-        return Author;
+        return author;
     }
 
     public void setAuthor(String author) {
-        Author = author;
+        this.author = author;
     }
     public void setDisplay(String display){
-        Display = display;
+        this.display = display;
     }
     public String  getDisplay(){
-        return Display;
+        return display;
     }
 
     public int getMessageID() {
-        return MessageID;
+        return messageID;
     }
 
     public void setMessageID(int messageID) {
-        MessageID = messageID;
+        this.messageID = messageID;
     }
 
     @Override
     public String toString() {
-        return MessageID+"\t"+Author+"\t"+Display+"\t"+content+"\t"+date;
+        return messageID +"\t"+ author +"\t"+display+"\t"+content+"\t"+date;
     }
 }

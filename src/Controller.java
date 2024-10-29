@@ -1,25 +1,19 @@
 import java.lang.*;
 import java.util.*;
-import java.io.*;
 
 public class Controller {
 
-    public void viewAllMessages(boolean signedIn){
-        /* Read file
-        * Display N posts
-        * prompt scroll N more posts
-        *
-        * if logged in show option to post/remove own posts
-        *
-        * */
-    }
-
     public static void verifyLogin(String username,String password){
-    User.FindUser(username,password);
+    if(!User.FindUser(username,password)){
+        StartView.showOptions();
+    }
     }
 
     public static void createUser(String username,String password,String displayname){
-        User.signUp(username,password,displayname);
+        User.saveUser(username,password,displayname);
+    }
+    public static void startUserView(User user) {
+        UserView.viewChoice(user);
     }
     public static void enterChoice(int opt,User user,String content){
         ArrayList<Message> messages = null;
@@ -37,7 +31,7 @@ public class Controller {
                 if (user != null){
                     UserView.displayMessages(messages);
                 } else {
-                    GuestView.displayMessages(messages);
+                    GuestView.displayMessagesGuest(messages);
                 }
 
                 break;
@@ -45,18 +39,28 @@ public class Controller {
                 messages = Message.viewOwnMessages(user);
                 UserView.displayMessages(messages);
                 break;
-            case 5:
-
-                break;
         }
 
     }
 
     public static void deleteMessage(int MessageID){
-    Message.deleteMessage(MessageID);
-
-
+    Message.deleteMessageFromFile(MessageID);
     }
 
+    public static int getNumberInput(Scanner scanner, int min, int max) {
+        int input = -1;
 
+        while (input < 0) {
+            try {
+                input = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException nfe) {
+                input = -1;
+            }
+            if (input < min || input > max) {
+                System.out.println("Please pick a number between " + min + " and " + max + "." );
+                input = -1;
+            }
+        }
+        return input;
+    }
 }
