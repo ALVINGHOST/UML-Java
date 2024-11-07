@@ -16,7 +16,7 @@ public class StartView {
         }
         inp.close();
     }
-    private static void signIn(){
+    public static void signIn(){
         String uName;
         String pWord;
         System.out.println("Please enter username: ");
@@ -28,7 +28,7 @@ public class StartView {
         Controller.verifyLogin(uName.toLowerCase(),pWord);
     }
 
-    private static void signUp(){
+    public static void signUp(){
         String uName = null;
         String pWord = null;
         String displayname = null;

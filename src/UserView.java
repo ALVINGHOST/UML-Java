@@ -15,6 +15,8 @@ public class UserView {
             switch (choice) {
                 case 1:
                     String content = null;
+                    boolean typing = true;
+                    while(typing){
                     System.out.println("Press Enter with an empty message to cancel the posting process");
                     System.out.println("Write your message. Press Enter to post: ");
                     Scanner cInp = new Scanner(System.in);
@@ -23,7 +25,14 @@ public class UserView {
                         System.out.println("Message canceled");
                         break;
                     }
-                    Controller.enterChoice(choice, user, content);
+                    if (content.length()>400){
+                        System.out.println("Please enter a message with less then 400 characters. you had "+ content.length() + " characters");
+                    }else{
+                        typing = false;
+                        Controller.enterChoice(choice, user, content);
+                    }
+                    }
+
                     break;
                 case 2:
                     Controller.enterChoice(choice, user, null);
@@ -50,7 +59,7 @@ public class UserView {
         for(Message m:messages){
             String opt;
             if (count % 3 == 0 && count != 0){
-                System.out.println("press any key to load more messages or press q to quit");
+                System.out.println("press enter to load more messages or press q and enter to quit");
                 opt = inp.nextLine().toLowerCase();
                 if(opt.equals("q")){
                     break;

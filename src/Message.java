@@ -99,6 +99,7 @@ public class Message {
     public static void deleteMessageFromFile(int messageID){
         String file = "MessageDB.csv";
         Scanner input = null;
+        boolean messageDeleted = false;
         ArrayList<Message> messages = new ArrayList<>();
         try {
             input = new Scanner(new File(file));
@@ -111,13 +112,16 @@ public class Message {
                 String cont = toks[3].trim();
                 String date = toks[4].trim();
                 if (messageID != mID){
-                    System.out.println(messageID + mID);
                     Message ac = new Message(auth,display,cont,date, mID);
                     messages.add(ac);
                 }else{
-                    System.out.println(messageID + mID);
+                    messageDeleted = true;
                     System.out.println("MESSAGE DELETED!");
                 }
+
+            }
+            if (!messageDeleted){
+                System.out.println("Message could not be found, please enter valid message id");
             }
 
         } catch (FileNotFoundException e) {

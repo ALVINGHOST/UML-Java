@@ -6,8 +6,8 @@ public class GuestView {
         boolean using = true;
         while (using) {
             Scanner inp = new Scanner(System.in);
-            System.out.println("Press 1 to see all messages, press 2 to Sign in or to sign up or press 0 to exit");
-            int choice = Controller.getNumberInput(inp,0,2);
+            System.out.println("Press 1 to see all messages, press 2 to Sign in or press 3 to sign up or press 0 to exit");
+            int choice = Controller.getNumberInput(inp,0,3);
 
             switch (choice) {
                 case 1:
@@ -15,7 +15,11 @@ public class GuestView {
                     break;
                 case 2:
                     using = false;
-                    StartView.showOptions();
+                    StartView.signIn();
+                    break;
+                case 3:
+                    using = false;
+                    StartView.signUp();
                     break;
                 case 0:
                     System.exit(0);
@@ -29,7 +33,7 @@ public class GuestView {
         for(Message m:messages){
             String opt;
             if (count % 3 == 0 && count != 0){
-                System.out.println("press any key to load more messages or press q to quit");
+                System.out.println("press enter to load more messages or press q and enter to quit");
                 opt = inp.nextLine().toLowerCase();
                 if(opt.equals("q")){
                     break;
